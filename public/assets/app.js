@@ -210,20 +210,22 @@ function applyStravaSummary(summary) {
     els.runTotal.value = runTotal ? roundForInput(runTotal) : "";
   }
   if (els.stravaStatus && summary.updatedAt) {
-    els.stravaStatus.textContent = `Strava synced ${formatSyncTime(summary.updatedAt)}`;
+    els.stravaStatus.textContent = `Strava synced ${formatSyncTimeWib(summary.updatedAt)}`;
   }
   updatePreview();
 }
 
-function formatSyncTime(value) {
+function formatSyncTimeWib(value) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
-  return date.toLocaleString("en-GB", {
+  const formatted = date.toLocaleString("en-GB", {
+    timeZone: "Asia/Jakarta",
     day: "2-digit",
     month: "short",
     hour: "2-digit",
     minute: "2-digit",
   });
+  return `${formatted} WIB`;
 }
 
 function buildCaption(day, entry, totals) {
