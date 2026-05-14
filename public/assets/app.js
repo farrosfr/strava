@@ -58,6 +58,7 @@ function loadState() {
   try {
     const parsed = JSON.parse(saved);
     Object.assign(state, parsed, { image: null });
+    state.postDate = todayIso();
   } catch {
     localStorage.removeItem(STORAGE_KEY);
   }
@@ -92,18 +93,39 @@ function dateDiffDays(fromIso, toIso) {
 }
 
 function getEntry(date = state.postDate) {
-  return getManualEntry(date) || state.entries[date] || {
-    runToday: state.importedRunByDate[date] || 0,
-    pushToday: 0,
-    otherSport: "",
-    otherActivity: "",
+  const localEntry = state.entries[date] || {};
+  const manualEntry = getManualEntry(date) || {};
+  return {
+    runToday: state.importedRunByDate[date] || localEntry.runToday || 0,
+    pushToday: manualEntry.pushToday ?? localEntry.pushToday ?? 0,
+    otherSport: manualEntry.otherSport ?? localEntry.otherSport ?? "",
+    otherActivity: manualEntry.otherActivity ?? localEntry.otherActivity ?? "",
   };
 }
 
+function getEntryForTotals(date) {
+  const localEntry = state.entries[date] || {};
+  const manualEntry = getManualEntry(date) || {};
+  return {
+    runToday: state.importedRunByDate[date] || localEntry.runToday || 0,
+    pushToday: manualEntry.pushToday ?? localEntry.pushToday ?? 0,
+  };
+}
+
+function getKnownDatesThrough(date) {
+  return Array.from(
+    new Set([
+      ...Object.keys(state.importedRunByDate),
+      ...Object.keys(state.entries),
+      ...Object.keys(getManualEntriesFromFile()),
+    ]),
+  )
+    .filter((entryDate) => entryDate <= date && entryDate >= state.startDate)
+    .sort((a, b) => a.localeCompare(b));
+}
+
 function getSortedEntriesThrough(date) {
-  return Object.entries(getAllManualEntries())
-    .filter(([entryDate]) => entryDate <= date && entryDate >= state.startDate)
-    .sort(([a], [b]) => a.localeCompare(b));
+  return getKnownDatesThrough(date).map((entryDate) => [entryDate, getEntryForTotals(entryDate)]);
 }
 
 function calculateTotals(date = state.postDate) {
@@ -213,7 +235,6 @@ function getManualEntriesFromFile() {
   (state.manualLog?.entries || []).forEach((entry) => {
     if (!entry.date) return;
     entries[entry.date] = {
-      runToday: 0,
       pushToday: parseNumber(entry.pushUps),
       otherSport: entry.otherSport || "",
       otherActivity: entry.otherActivity || "",
