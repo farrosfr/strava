@@ -227,15 +227,14 @@ function formatSyncTime(value) {
 
 function buildCaption(day, entry, totals) {
   const lines = [
-    `Day ${day}:`,
-    `run/walk today: ${formatKm(entry.runToday)} km`,
-    `run/walk total: ${formatKm(totals.runTotal)} km`,
-    `push ups today: ${formatInt(entry.pushToday)}`,
-    `push ups total: ${formatInt(totals.pushTotal)}`,
+    `Day ${day}.`,
+    "",
+    `Run/walk: ${formatKm(entry.runToday)} km today | ${formatKm(totals.runTotal)} km total`,
+    `Push-ups: ${formatInt(entry.pushToday)} today | ${formatInt(totals.pushTotal)} total`,
   ];
 
-  if (entry.otherSport) lines.push(`other sport: ${entry.otherSport}`);
-  if (entry.otherActivity) lines.push(`other activity: ${entry.otherActivity}`);
+  if (entry.otherSport) lines.push(`Other sport: ${entry.otherSport}`);
+  if (entry.otherActivity) lines.push(`Other activity: ${entry.otherActivity}`);
   lines.push("", getQuoteLine());
   return lines.join("\n");
 }
@@ -271,7 +270,8 @@ function drawCanvas(day, entry, totals) {
   canvas.height = height;
 
   if (state.image) {
-    drawCoverImage(ctx, state.image, width, height);
+    const footerHeight = getWatermarkFooterHeight(width);
+    drawCoverImage(ctx, state.image, width, height - footerHeight);
   } else {
     const gradient = ctx.createLinearGradient(0, 0, width, height);
     gradient.addColorStop(0, "#263238");
@@ -307,82 +307,81 @@ function drawCoverImage(ctx, image, width, height) {
 }
 
 function drawWatermark(ctx, width, height, day, entry, totals) {
-  const margin = Math.round(width * 0.04);
-  const panelWidth = Math.min(width - margin * 2, Math.round(width * 0.78));
-  const panelPad = Math.round(width * 0.026);
-  const eyebrowSize = Math.max(16, Math.round(width * 0.014));
-  const daySize = Math.max(38, Math.round(width * 0.044));
-  const labelSize = Math.max(14, Math.round(width * 0.013));
-  const valueSize = Math.max(22, Math.round(width * 0.024));
-  const quoteSize = Math.max(18, Math.round(width * 0.017));
-  const creditSize = Math.max(16, Math.round(width * 0.014));
-  const panelHeight = Math.round(panelPad * 2 + daySize * 1.25 + valueSize * 2.75 + quoteSize * 1.6);
-  const x = margin;
-  const y = height - margin - panelHeight;
+  const footerHeight = getWatermarkFooterHeight(width);
+  const y = height - footerHeight;
+  const padX = Math.round(width * 0.048);
+  const topPad = Math.round(width * 0.03);
+  const daySize = Math.max(38, Math.round(width * 0.042));
+  const labelSize = Math.max(15, Math.round(width * 0.014));
+  const valueSize = Math.max(20, Math.round(width * 0.022));
+  const quoteSize = Math.max(17, Math.round(width * 0.016));
+  const creditSize = Math.max(18, Math.round(width * 0.017));
+  const dividerX = padX + Math.round(width * 0.19);
+  const statsX = dividerX + Math.round(width * 0.032);
+  const statsY = y + topPad + Math.round(width * 0.004);
+  const rowGap = valueSize * 1.55;
 
   ctx.save();
-  ctx.shadowColor = "rgba(0,0,0,0.32)";
-  ctx.shadowBlur = Math.round(width * 0.024);
-  ctx.fillStyle = "rgba(8, 10, 12, 0.52)";
-  roundRect(ctx, x, y, panelWidth, panelHeight, 10);
-  ctx.fill();
-  ctx.strokeStyle = "rgba(255,255,255,0.18)";
-  ctx.lineWidth = Math.max(1, Math.round(width * 0.0015));
-  ctx.stroke();
-  ctx.shadowBlur = 0;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, y, width, footerHeight);
+  ctx.fillStyle = "#f1f2f4";
+  ctx.fillRect(0, y, width, Math.max(2, Math.round(width * 0.002)));
 
   ctx.textBaseline = "top";
   ctx.textAlign = "left";
-  ctx.fillStyle = "rgba(255,255,255,0.66)";
-  ctx.font = `800 ${eyebrowSize}px system-ui, sans-serif`;
-  ctx.fillText("DAILY LOG", x + panelPad, y + panelPad);
-
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = "#111315";
   ctx.font = `900 ${daySize}px system-ui, sans-serif`;
-  ctx.fillText(`DAY ${day}`, x + panelPad, y + panelPad + eyebrowSize * 1.18);
+  ctx.fillText(`DAY ${day}`, padX, y + topPad);
 
-  const statsY = y + panelPad + eyebrowSize * 1.2 + daySize * 1.18;
-  const colGap = Math.round(width * 0.038);
-  const colWidth = (panelWidth - panelPad * 2 - colGap) / 2;
-  drawMetric(ctx, x + panelPad, statsY, colWidth, "RUN/WALK", `${formatKm(entry.runToday)} km`, `${formatKm(totals.runTotal)} km total`, labelSize, valueSize);
-  drawMetric(ctx, x + panelPad + colWidth + colGap, statsY, colWidth, "PUSH UPS", formatInt(entry.pushToday), `${formatInt(totals.pushTotal)} total`, labelSize, valueSize);
-
-  const activity = compactText(entry.otherActivity || entry.otherSport, 44);
-  if (activity) {
-    ctx.fillStyle = "rgba(255,255,255,0.72)";
-    ctx.font = `700 ${labelSize}px system-ui, sans-serif`;
-    ctx.fillText(activity.toUpperCase(), x + panelPad, statsY + valueSize * 2.25);
-  }
-
-  const footerY = y + panelHeight - panelPad - quoteSize * 1.05;
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = "#767b82";
   ctx.font = `800 ${quoteSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(getQuoteLine(), 38), x + panelPad, footerY);
+  ctx.fillText(compactText(getQuoteLine(), 23), padX, y + topPad + daySize * 1.08);
+
+  ctx.fillStyle = "#d8dadd";
+  ctx.fillRect(dividerX, y + topPad, Math.max(2, Math.round(width * 0.002)), footerHeight - topPad * 2);
+
+  drawWhiteMetric(ctx, statsX, statsY, "RUN/WALK", `${formatKm(entry.runToday)} km`, "TODAY", labelSize, valueSize);
+  drawWhiteMetric(ctx, statsX + Math.round(width * 0.18), statsY, "TOTAL", `${formatKm(totals.runTotal)} km`, "", labelSize, valueSize);
+  drawWhiteMetric(ctx, statsX, statsY + rowGap, "PUSH-UPS", formatInt(entry.pushToday), "TODAY", labelSize, valueSize);
+  drawWhiteMetric(ctx, statsX + Math.round(width * 0.18), statsY + rowGap, "TOTAL", formatInt(totals.pushTotal), "", labelSize, valueSize);
+
+  const activity = compactText(entry.otherActivity || entry.otherSport, 34);
+  if (activity) {
+    ctx.fillStyle = "#4d535a";
+    ctx.font = `800 ${labelSize}px system-ui, sans-serif`;
+    ctx.fillText(activity.toUpperCase(), statsX, y + footerHeight - topPad - labelSize * 1.05);
+  }
 
   const credit = splitCredit(els.creditText.value.trim() || state.credit);
   ctx.textAlign = "right";
-  ctx.fillStyle = "rgba(255,255,255,0.86)";
+  ctx.fillStyle = "#111315";
   ctx.font = `800 ${creditSize}px system-ui, sans-serif`;
-  ctx.fillText(credit.handle, x + panelWidth - panelPad, y + panelPad);
-  ctx.fillStyle = "rgba(255,255,255,0.56)";
+  ctx.fillText(compactText(credit.handle, 18), width - padX, y + topPad);
+  ctx.fillStyle = "#767b82";
   ctx.font = `700 ${labelSize}px system-ui, sans-serif`;
-  ctx.fillText(credit.site, x + panelWidth - panelPad, y + panelPad + creditSize * 1.25);
+  ctx.fillText(compactText(credit.site, 18), width - padX, y + topPad + creditSize * 1.35);
   ctx.restore();
 }
 
-function drawMetric(ctx, x, y, width, label, value, total, labelSize, valueSize) {
+function getWatermarkFooterHeight(width) {
+  return Math.round(width * 0.19);
+}
+
+function drawWhiteMetric(ctx, x, y, label, value, suffix, labelSize, valueSize) {
   ctx.textAlign = "left";
-  ctx.fillStyle = "rgba(255,255,255,0.62)";
+  ctx.fillStyle = "#767b82";
   ctx.font = `800 ${labelSize}px system-ui, sans-serif`;
   ctx.fillText(label, x, y);
 
-  ctx.fillStyle = "#ffffff";
+  ctx.fillStyle = "#111315";
   ctx.font = `900 ${valueSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(value, 15), x, y + labelSize * 1.25);
+  ctx.fillText(compactText(value, 15), x, y + labelSize * 1.18);
 
-  ctx.fillStyle = "rgba(255,255,255,0.68)";
-  ctx.font = `700 ${labelSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(total, 20), x, y + labelSize * 1.35 + valueSize * 1.08, width);
+  if (suffix) {
+    ctx.fillStyle = "#9aa0a6";
+    ctx.font = `800 ${labelSize}px system-ui, sans-serif`;
+    ctx.fillText(suffix, x + ctx.measureText(compactText(value, 15)).width + labelSize * 0.5, y + labelSize * 1.55);
+  }
 }
 
 function compactText(text, limit) {
