@@ -36,6 +36,12 @@ The **Open Threads** button uses `https://www.threads.net/intent/post?text=...` 
 
 The **Share image** button uses the browser's native share sheet with the generated PNG and caption. On supported mobile browsers this can share into Threads. If file sharing is not available, it downloads the image and opens the Threads text draft.
 
+The share text also appends `#Running Threads` so Threads can offer the Running Threads topic. Threads may still require selecting the topic in the composer before posting:
+
+```text
+https://www.threads.com/search?q=Running%20Threads&serp_type=deeplink
+```
+
 ## Strava
 
 The public site does not call Strava directly. GitHub Actions fetches Strava with repository secrets and writes a public summary file to `public/data/strava-summary.json`.

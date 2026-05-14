@@ -1,4 +1,5 @@
 const STORAGE_KEY = "daily-watermark-state-v1";
+const THREADS_TOPIC_NAME = "Running Threads";
 
 const els = {
   startDate: document.querySelector("#startDate"),
@@ -432,8 +433,12 @@ function downloadImage() {
 
 function openThreadsDraft() {
   updatePreview();
-  const text = encodeURIComponent(els.captionPreview.textContent);
-  window.open(`https://www.threads.net/intent/post?text=${text}`, "_blank", "noopener,noreferrer");
+  const text = encodeURIComponent(buildThreadsShareText());
+  window.open(`https://www.threads.com/intent/post?text=${text}`, "_blank", "noopener,noreferrer");
+}
+
+function buildThreadsShareText() {
+  return `${els.captionPreview.textContent}\n\n#${THREADS_TOPIC_NAME}`;
 }
 
 function canvasToBlob(canvas) {
@@ -452,7 +457,7 @@ async function shareImageDraft() {
   });
   const shareData = {
     title: els.dayNumber.textContent,
-    text: els.captionPreview.textContent,
+    text: buildThreadsShareText(),
     files: [file],
   };
 
