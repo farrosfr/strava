@@ -9,6 +9,7 @@ Astro static web app for creating daily sport/activity captions and watermarked 
 - Automatic totals from saved daily entries.
 - Optional Strava activities CSV import for run/walk totals.
 - Automated Strava run/walk summary from GitHub Actions.
+- Day-by-day history table for validating Strava run/walk totals and saved push-ups.
 - Browser-only image crop and watermark export.
 - Threads text draft redirect.
 - Native image sharing on browsers that support the Web Share API with files.
@@ -69,6 +70,16 @@ The safe static workflow is:
 3. The browser reads the file locally and calculates run/walk distance by date.
 
 CSV import is still available as a fallback when the Strava workflow has not been configured.
+
+## History Validation
+
+The app shows a **History** table under the preview. It merges:
+
+- Strava daily run/walk totals from `public/data/strava-summary.json`
+- saved push-up and activity entries from browser local storage
+- current unsaved form values for the selected post date
+
+Use **Save day** after adding push-ups or manual activity so those values stay in the history table.
 
 ## GitHub Pages
 

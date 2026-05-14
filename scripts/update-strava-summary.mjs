@@ -82,15 +82,27 @@ function isRunWalk(activity) {
 
 function summarize(activities, today) {
   const runWalk = activities.filter(isRunWalk);
+  const dailyMap = new Map();
+  runWalk.forEach((activity) => {
+    const date = dateInTimezone(new Date(activity.start_date), STRAVA_TIMEZONE);
+    dailyMap.set(date, (dailyMap.get(date) || 0) + Number(activity.distance || 0));
+  });
   const todayMeters = runWalk
     .filter((activity) => dateInTimezone(new Date(activity.start_date), STRAVA_TIMEZONE) === today)
     .reduce((sum, activity) => sum + Number(activity.distance || 0), 0);
   const totalMeters = runWalk.reduce((sum, activity) => sum + Number(activity.distance || 0), 0);
+  const daily = Array.from(dailyMap.entries())
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, meters]) => ({
+      date,
+      runWalkKm: Math.round((meters / 1000) * 100) / 100,
+    }));
 
   return {
     todayKm: Math.round((todayMeters / 1000) * 100) / 100,
     totalKm: Math.round((totalMeters / 1000) * 100) / 100,
-    activities: runWalk.slice(0, 12).map((activity) => ({
+    daily,
+    activities: runWalk.map((activity) => ({
       id: activity.id,
       name: activity.name,
       type: activity.sport_type || activity.type,
@@ -117,6 +129,7 @@ async function main() {
     total: {
       runWalkKm: summary.totalKm,
     },
+    daily: summary.daily,
     activities: summary.activities,
   };
 

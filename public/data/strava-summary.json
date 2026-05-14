@@ -10,6 +10,12 @@
   "total": {
     "runWalkKm": 3.76
   },
+  "daily": [
+    {
+      "date": "2026-05-14",
+      "runWalkKm": 3.76
+    }
+  ],
   "activities": [
     {
       "id": 18499561548,

@@ -216,7 +216,8 @@ button:hover {
   box-shadow: var(--shadow);
 }
 
-.caption-panel {
+.caption-panel,
+.history-panel {
   width: min(100%, 720px);
   justify-self: center;
   border: 1px solid var(--line);
@@ -231,6 +232,62 @@ button:hover {
   color: var(--muted);
   font-size: 0.8rem;
   font-weight: 800;
+  text-transform: uppercase;
+}
+
+.history-panel {
+  padding: 14px;
+}
+
+.history-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.history-head span {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.history-head strong {
+  color: var(--ink);
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th,
+td {
+  border-top: 1px solid var(--line);
+  padding: 9px 8px;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+td:last-child,
+th:last-child {
+  white-space: normal;
+}
+
+th {
+  color: var(--muted);
+  font-size: 0.75rem;
+  font-weight: 900;
   text-transform: uppercase;
 }
 
