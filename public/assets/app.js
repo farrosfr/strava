@@ -378,14 +378,13 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   const padX = Math.round(width * 0.048);
   const topPad = Math.round(width * 0.03);
   const daySize = Math.max(38, Math.round(width * 0.042));
-  const labelSize = Math.max(15, Math.round(width * 0.014));
-  const valueSize = Math.max(20, Math.round(width * 0.022));
+  const labelSize = Math.max(14, Math.round(width * 0.0125));
+  const valueSize = Math.max(21, Math.round(width * 0.021));
   const quoteSize = Math.max(17, Math.round(width * 0.016));
   const creditSize = Math.max(18, Math.round(width * 0.017));
   const dividerX = padX + Math.round(width * 0.19);
-  const statsX = dividerX + Math.round(width * 0.032);
-  const statsY = y + topPad + Math.round(width * 0.004);
-  const rowGap = valueSize * 1.55;
+  const statsX = dividerX + Math.round(width * 0.035);
+  const statsY = y + topPad + Math.round(width * 0.003);
 
   ctx.save();
   ctx.fillStyle = "#ffffff";
@@ -406,10 +405,10 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   ctx.fillStyle = "#d8dadd";
   ctx.fillRect(dividerX, y + topPad, Math.max(2, Math.round(width * 0.002)), footerHeight - topPad * 2);
 
-  drawWhiteMetric(ctx, statsX, statsY, "RUN/WALK", `${formatKm(entry.runToday)} km`, "TODAY", labelSize, valueSize);
-  drawWhiteMetric(ctx, statsX + Math.round(width * 0.18), statsY, "TOTAL", `${formatKm(totals.runTotal)} km`, "", labelSize, valueSize);
-  drawWhiteMetric(ctx, statsX, statsY + rowGap, "PUSH-UPS", formatInt(entry.pushToday), "TODAY", labelSize, valueSize);
-  drawWhiteMetric(ctx, statsX + Math.round(width * 0.18), statsY + rowGap, "TOTAL", formatInt(totals.pushTotal), "", labelSize, valueSize);
+  drawMetricTable(ctx, statsX, statsY, width, labelSize, valueSize, [
+    ["RUN/WALK", `${formatKm(entry.runToday)} km`, `${formatKm(totals.runTotal)} km`],
+    ["PUSH-UPS", formatInt(entry.pushToday), formatInt(totals.pushTotal)],
+  ]);
 
   const activity = compactText(entry.otherActivity || entry.otherSport, 34);
   if (activity) {
@@ -430,24 +429,35 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
 }
 
 function getWatermarkFooterHeight(width) {
-  return Math.round(width * 0.19);
+  return Math.round(width * 0.22);
 }
 
-function drawWhiteMetric(ctx, x, y, label, value, suffix, labelSize, valueSize) {
+function drawMetricTable(ctx, x, y, width, labelSize, valueSize, rows) {
+  const metricColWidth = Math.round(width * 0.13);
+  const todayX = x + metricColWidth;
+  const totalX = todayX + Math.round(width * 0.13);
+  const headerY = y;
+  const firstRowY = y + labelSize * 1.95;
+  const rowGap = valueSize * 1.65;
+
   ctx.textAlign = "left";
-  ctx.fillStyle = "#767b82";
+  ctx.fillStyle = "#9aa0a6";
   ctx.font = `800 ${labelSize}px system-ui, sans-serif`;
-  ctx.fillText(label, x, y);
+  ctx.fillText("TODAY", todayX, headerY);
+  ctx.fillText("TOTAL", totalX, headerY);
 
-  ctx.fillStyle = "#111315";
-  ctx.font = `900 ${valueSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(value, 15), x, y + labelSize * 1.18);
+  rows.forEach(([label, today, total], index) => {
+    const rowY = firstRowY + rowGap * index;
 
-  if (suffix) {
-    ctx.fillStyle = "#9aa0a6";
+    ctx.fillStyle = "#767b82";
     ctx.font = `800 ${labelSize}px system-ui, sans-serif`;
-    ctx.fillText(suffix, x + ctx.measureText(compactText(value, 15)).width + labelSize * 0.5, y + labelSize * 1.55);
-  }
+    ctx.fillText(label, x, rowY + valueSize * 0.12);
+
+    ctx.fillStyle = "#111315";
+    ctx.font = `800 ${valueSize}px system-ui, sans-serif`;
+    ctx.fillText(compactText(today, 12), todayX, rowY);
+    ctx.fillText(compactText(total, 12), totalX, rowY);
+  });
 }
 
 function compactText(text, limit) {
