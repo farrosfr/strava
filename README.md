@@ -10,6 +10,7 @@ Astro static web app for creating daily sport/activity captions and watermarked 
 - Optional Strava activities CSV import for run/walk totals.
 - Automated Strava run/walk summary from GitHub Actions.
 - Day-by-day history table for validating Strava run/walk totals and saved push-ups.
+- Sveltia CMS admin for shared manual logs.
 - Browser-only image crop and watermark export.
 - Threads text draft redirect.
 - Native image sharing on browsers that support the Web Share API with files.
@@ -80,6 +81,14 @@ The app shows a **History** table under the preview. It merges:
 - current unsaved form values for the selected post date
 
 Use **Save day** after adding push-ups or manual activity so those values stay in the history table.
+
+Shared manual data lives in `public/data/manual-log.json`. Edit it from:
+
+```text
+https://farrosfr.github.io/strava/admin/
+```
+
+Sveltia CMS commits changes to GitHub, so push-ups and manual activity are available from every device after the site redeploys. The in-app **Save day** button remains useful for local drafts, but CMS data is the shared source.
 
 ## GitHub Pages
 

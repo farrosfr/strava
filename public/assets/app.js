@@ -42,6 +42,7 @@ const state = {
   entries: {},
   importedRunByDate: {},
   stravaSummary: null,
+  manualLog: null,
   image: null,
 };
 
@@ -93,7 +94,7 @@ function dateDiffDays(fromIso, toIso) {
 }
 
 function getEntry(date = state.postDate) {
-  return state.entries[date] || {
+  return getManualEntry(date) || state.entries[date] || {
     runToday: state.importedRunByDate[date] || 0,
     pushToday: 0,
     otherSport: "",
@@ -102,20 +103,19 @@ function getEntry(date = state.postDate) {
 }
 
 function getSortedEntriesThrough(date) {
-  return Object.entries(state.entries)
+  return Object.entries(getAllManualEntries())
     .filter(([entryDate]) => entryDate <= date && entryDate >= state.startDate)
     .sort(([a], [b]) => a.localeCompare(b));
 }
 
 function calculateTotals(date = state.postDate) {
   const manualEntries = getSortedEntriesThrough(date);
-  const manualRun = manualEntries.reduce((sum, [, entry]) => sum + parseNumber(entry.runToday), 0);
   const manualPush = manualEntries.reduce((sum, [, entry]) => sum + parseNumber(entry.pushToday), 0);
   const importedRun = Object.entries(state.importedRunByDate)
-    .filter(([entryDate]) => entryDate <= date && entryDate >= state.startDate && !state.entries[entryDate])
+    .filter(([entryDate]) => entryDate <= date && entryDate >= state.startDate)
     .reduce((sum, [, km]) => sum + parseNumber(km), 0);
   return {
-    runTotal: manualRun + importedRun,
+    runTotal: importedRun,
     pushTotal: manualPush,
   };
 }
@@ -200,6 +200,42 @@ async function loadStravaSummary() {
   }
 }
 
+async function loadManualLog() {
+  try {
+    const response = await fetch(`./data/manual-log.json?ts=${Date.now()}`);
+    if (!response.ok) return;
+    state.manualLog = await response.json();
+    syncInputsFromState();
+  } catch {
+    state.manualLog = null;
+  }
+}
+
+function getManualEntriesFromFile() {
+  const entries = {};
+  (state.manualLog?.entries || []).forEach((entry) => {
+    if (!entry.date) return;
+    entries[entry.date] = {
+      runToday: 0,
+      pushToday: parseNumber(entry.pushUps),
+      otherSport: entry.otherSport || "",
+      otherActivity: entry.otherActivity || "",
+    };
+  });
+  return entries;
+}
+
+function getAllManualEntries() {
+  return {
+    ...state.entries,
+    ...getManualEntriesFromFile(),
+  };
+}
+
+function getManualEntry(date) {
+  return getAllManualEntries()[date] || null;
+}
+
 function applyStravaSummary(summary) {
   const runToday = parseNumber(summary.today?.runWalkKm);
   const runTotal = parseNumber(summary.total?.runWalkKm);
@@ -263,7 +299,7 @@ function buildHistoryRows() {
   const startDate = els.startDate.value || state.startDate;
   const postDate = els.postDate.value || state.postDate;
   const dates = new Set([postDate]);
-  Object.keys(state.entries).forEach((date) => dates.add(date));
+  Object.keys(getAllManualEntries()).forEach((date) => dates.add(date));
   Object.keys(state.importedRunByDate).forEach((date) => dates.add(date));
   getStravaDaily().forEach((item) => dates.add(item.date));
 
@@ -273,7 +309,7 @@ function buildHistoryRows() {
     .sort((a, b) => a.localeCompare(b));
 
   return sortedDates.map((date) => {
-    const saved = state.entries[date] || {};
+    const saved = getManualEntry(date) || {};
     const isCurrent = date === postDate;
     const entry = isCurrent ? { ...saved, ...currentEntry } : saved;
     const stravaRun = getStravaDaily().find((item) => item.date === date)?.runWalkKm;
@@ -711,4 +747,5 @@ els.stravaCsv.addEventListener("change", (event) => importStravaCsv(event.target
 
 loadState();
 syncInputsFromState();
+loadManualLog();
 loadStravaSummary();

@@ -65,6 +65,29 @@ select {
   gap: 12px;
 }
 
+.brand-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-link {
+  min-height: 40px;
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  padding: 8px 12px;
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.admin-link:hover {
+  border-color: var(--accent);
+}
+
 .eyebrow {
   margin: 0 0 4px;
   color: var(--muted);
