@@ -1,0 +1,13 @@
+{
+  "updatedAt": null,
+  "date": null,
+  "timezone": "Asia/Jakarta",
+  "source": "placeholder",
+  "today": {
+    "runWalkKm": 0
+  },
+  "total": {
+    "runWalkKm": 0
+  },
+  "activities": []
+}

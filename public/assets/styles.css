@@ -173,6 +173,13 @@ button:hover {
   font-size: 1.05rem;
 }
 
+.day-card small {
+  min-height: 1em;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .import-box,
 .advanced-box {
   border: 1px solid var(--line);

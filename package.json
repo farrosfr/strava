@@ -1,0 +1,15 @@
+{
+  "name": "daily-threads-watermark",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0",
+    "build": "astro build",
+    "preview": "astro preview --host 0.0.0.0",
+    "strava:update": "node scripts/update-strava-summary.mjs"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  }
+}

@@ -1,6 +1,6 @@
 # Daily Threads Watermark
 
-Static web app for creating daily sport/activity captions and watermarked images for Threads.
+Astro static web app for creating daily sport/activity captions and watermarked images for Threads.
 
 ## Features
 
@@ -8,6 +8,7 @@ Static web app for creating daily sport/activity captions and watermarked images
 - Daily run/walk, push-up, other sport, and other activity inputs.
 - Automatic totals from saved daily entries.
 - Optional Strava activities CSV import for run/walk totals.
+- Automated Strava run/walk summary from GitHub Actions.
 - Browser-only image crop and watermark export.
 - Threads text draft redirect.
 - Native image sharing on browsers that support the Web Share API with files.
@@ -15,7 +16,12 @@ Static web app for creating daily sport/activity captions and watermarked images
 
 ## Use
 
-Open `index.html` in a browser.
+Run locally:
+
+```sh
+npm install
+npm run dev
+```
 
 1. Set the start date, for example `2026-05-14`.
 2. Add today's run/walk, push-ups, and other activity.
@@ -32,7 +38,21 @@ The **Share image** button uses the browser's native share sheet with the genera
 
 ## Strava
 
-This version cannot directly access a private Strava account from GitHub Pages without OAuth and a secure token exchange service. A static public site must not contain a Strava client secret.
+The public site does not call Strava directly. GitHub Actions fetches Strava with repository secrets and writes a public summary file to `public/data/strava-summary.json`.
+
+Add these repository secrets:
+
+- `STRAVA_CLIENT_ID`
+- `STRAVA_CLIENT_SECRET`
+- `STRAVA_REFRESH_TOKEN`
+
+Optional repository variable:
+
+- `STRAVA_START_DATE`, defaults to `2026-05-14`
+
+The workflow `.github/workflows/update-strava.yml` runs every 30 minutes and can also be triggered manually.
+
+A static public site must not contain a Strava client secret. Only the generated summary JSON is public.
 
 The safe static workflow is:
 
@@ -40,14 +60,10 @@ The safe static workflow is:
 2. Upload the CSV in the **Import Strava CSV** panel.
 3. The browser reads the file locally and calculates run/walk distance by date.
 
-A later version can add a small backend or serverless function for Strava OAuth.
+CSV import is still available as a fallback when the Strava workflow has not been configured.
 
 ## GitHub Pages
 
-Commit these files to a repository and enable Pages from the repository settings:
+This project deploys through GitHub Actions with `.github/workflows/deploy.yml`.
 
-- Source: deploy from branch
-- Branch: `main`
-- Folder: `/root`
-
-The `.nojekyll` file is included so GitHub Pages serves the static files directly.
+Repository Pages source should be set to **GitHub Actions**.

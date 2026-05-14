@@ -5,6 +5,7 @@ const els = {
   postDate: document.querySelector("#postDate"),
   dayNumber: document.querySelector("#dayNumber"),
   headlineText: document.querySelector("#headlineText"),
+  stravaStatus: document.querySelector("#stravaStatus"),
   runToday: document.querySelector("#runToday"),
   pushToday: document.querySelector("#pushToday"),
   otherSport: document.querySelector("#otherSport"),
@@ -37,6 +38,7 @@ const state = {
   customQuote: "",
   entries: {},
   importedRunByDate: {},
+  stravaSummary: null,
   image: null,
 };
 
@@ -178,6 +180,49 @@ function updatePreview() {
   els.headlineText.textContent = entry.otherActivity || entry.otherSport || "Keep the streak moving.";
   els.captionPreview.textContent = caption;
   drawCanvas(day, entry, totals);
+}
+
+async function loadStravaSummary() {
+  try {
+    const response = await fetch(`./data/strava-summary.json?ts=${Date.now()}`);
+    if (!response.ok) return;
+    const summary = await response.json();
+    if (!summary || summary.source === "placeholder") return;
+
+    state.stravaSummary = summary;
+    applyStravaSummary(summary);
+  } catch {
+    if (els.stravaStatus) els.stravaStatus.textContent = "";
+  }
+}
+
+function applyStravaSummary(summary) {
+  const runToday = parseNumber(summary.today?.runWalkKm);
+  const runTotal = parseNumber(summary.total?.runWalkKm);
+  const summaryDate = summary.date || todayIso();
+  state.importedRunByDate[summaryDate] = runToday;
+
+  if ((els.postDate.value || state.postDate) === summaryDate && !parseNumber(els.runToday.value)) {
+    els.runToday.value = runToday ? roundForInput(runToday) : "";
+  }
+  if (!parseNumber(els.runTotal.value)) {
+    els.runTotal.value = runTotal ? roundForInput(runTotal) : "";
+  }
+  if (els.stravaStatus && summary.updatedAt) {
+    els.stravaStatus.textContent = `Strava synced ${formatSyncTime(summary.updatedAt)}`;
+  }
+  updatePreview();
+}
+
+function formatSyncTime(value) {
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return date.toLocaleString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 function buildCaption(day, entry, totals) {
@@ -580,3 +625,4 @@ els.stravaCsv.addEventListener("change", (event) => importStravaCsv(event.target
 
 loadState();
 syncInputsFromState();
+loadStravaSummary();
