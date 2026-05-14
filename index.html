@@ -20,21 +20,15 @@
             </button>
           </div>
 
-          <div class="form-grid">
-            <label>
-              <span>Start date</span>
-              <input id="startDate" type="date">
-            </label>
-            <label>
-              <span>Post date</span>
-              <input id="postDate" type="date">
-            </label>
-          </div>
-
           <div class="day-card" aria-live="polite">
             <span id="dayNumber">Day 1</span>
             <strong id="headlineText">Build the streak.</strong>
           </div>
+
+          <label>
+            <span>Photo</span>
+            <input id="imageInput" type="file" accept="image/*">
+          </label>
 
           <div class="section-title">Today</div>
           <div class="form-grid">
@@ -58,36 +52,6 @@
             <input id="otherActivity" type="text" placeholder="e.g. develop Astro web">
           </label>
 
-          <div class="form-grid">
-            <label>
-              <span>Closing style</span>
-              <select id="quoteStyle">
-                <option value="you-vs-you">You vs you</option>
-                <option value="one-percent">1% chance</option>
-                <option value="show-up">Show up</option>
-                <option value="proof">Proof</option>
-                <option value="discipline">Discipline</option>
-                <option value="custom">Custom</option>
-              </select>
-            </label>
-            <label>
-              <span>Custom line</span>
-              <input id="customQuote" type="text" placeholder="e.g. No excuses today.">
-            </label>
-          </div>
-
-          <div class="section-title">Totals</div>
-          <div class="form-grid">
-            <label>
-              <span>Run / walk total km</span>
-              <input id="runTotal" type="number" min="0" step="0.01" inputmode="decimal">
-            </label>
-            <label>
-              <span>Push ups total</span>
-              <input id="pushTotal" type="number" min="0" step="1" inputmode="numeric">
-            </label>
-          </div>
-
           <div class="button-row">
             <button id="saveEntryButton" class="primary-button" type="button">Save day</button>
             <button id="copyCaptionButton" type="button">Copy caption</button>
@@ -98,27 +62,68 @@
             <input id="stravaCsv" type="file" accept=".csv,text/csv">
           </details>
 
-          <div class="section-title">Image</div>
-          <label>
-            <span>Photo</span>
-            <input id="imageInput" type="file" accept="image/*">
-          </label>
+          <details class="advanced-box">
+            <summary>Template</summary>
+            <div class="details-content">
+              <div class="form-grid">
+                <label>
+                  <span>Start date</span>
+                  <input id="startDate" type="date">
+                </label>
+                <label>
+                  <span>Post date</span>
+                  <input id="postDate" type="date">
+                </label>
+              </div>
 
-          <div class="form-grid">
-            <label>
-              <span>Crop ratio</span>
-              <select id="ratioSelect">
-                <option value="4:5">4:5 portrait</option>
-                <option value="1:1">1:1 square</option>
-                <option value="16:9">16:9 landscape</option>
-                <option value="9:16">9:16 story</option>
-              </select>
-            </label>
-            <label>
-              <span>Credit</span>
-              <input id="creditText" type="text" value="@farrosfr | farrosfr.com">
-            </label>
-          </div>
+              <div class="form-grid">
+                <label>
+                  <span>Run / walk total km</span>
+                  <input id="runTotal" type="number" min="0" step="0.01" inputmode="decimal">
+                </label>
+                <label>
+                  <span>Push ups total</span>
+                  <input id="pushTotal" type="number" min="0" step="1" inputmode="numeric">
+                </label>
+              </div>
+
+              <div class="form-grid">
+                <label>
+                  <span>Closing style</span>
+                  <select id="quoteStyle">
+                    <option value="you-vs-you">You vs you</option>
+                    <option value="one-percent">1% chance</option>
+                    <option value="show-up">Show up</option>
+                    <option value="proof">Proof</option>
+                    <option value="discipline">Discipline</option>
+                    <option value="custom">Custom</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Custom line</span>
+                  <input id="customQuote" type="text" placeholder="e.g. No excuses today.">
+                </label>
+              </div>
+
+              <div class="form-grid">
+                <label>
+                  <span>Crop ratio</span>
+                  <select id="ratioSelect">
+                    <option value="4:5">4:5 portrait</option>
+                    <option value="1:1">1:1 square</option>
+                    <option value="16:9">16:9 landscape</option>
+                    <option value="9:16">9:16 story</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Credit</span>
+                  <input id="creditText" type="text" value="@farrosfr | farrosfr.com">
+                </label>
+              </div>
+
+              <button id="saveTemplateButton" type="button">Save template</button>
+            </div>
+          </details>
 
           <div class="button-row">
             <button id="downloadButton" class="primary-button" type="button">Download image</button>
@@ -127,7 +132,6 @@
 
           <div class="button-row">
             <button id="shareImageButton" type="button">Share image</button>
-            <button id="saveTemplateButton" type="button">Save template</button>
           </div>
         </aside>
 

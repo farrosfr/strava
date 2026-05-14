@@ -53,7 +53,7 @@ select {
 .controls {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
   padding: 20px;
 }
 
@@ -108,7 +108,7 @@ label span {
 input,
 select {
   width: 100%;
-  min-height: 42px;
+  min-height: 40px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--white);
@@ -124,7 +124,7 @@ button:focus-visible {
 }
 
 button {
-  min-height: 42px;
+  min-height: 40px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--white);
@@ -158,7 +158,7 @@ button:hover {
 .day-card {
   display: grid;
   gap: 4px;
-  padding: 14px;
+  padding: 12px;
   border: 1px solid #c8e3df;
   border-radius: 8px;
   background: #edf8f6;
@@ -173,16 +173,24 @@ button:hover {
   font-size: 1.05rem;
 }
 
-.import-box {
+.import-box,
+.advanced-box {
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 12px;
   background: var(--panel);
 }
 
-.import-box summary {
+.import-box summary,
+.advanced-box summary {
   cursor: pointer;
   font-weight: 800;
+}
+
+.details-content {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
 }
 
 .preview-area {
