@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daily Threads Watermark</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="workspace" aria-label="Watermark generator">
+        <aside class="panel controls" aria-label="Daily activity controls">
+          <div class="brand-row">
+            <div>
+              <p class="eyebrow">Threads activity post</p>
+              <h1>Daily watermark</h1>
+            </div>
+            <button id="resetButton" class="icon-button" type="button" title="Reset saved data" aria-label="Reset saved data">
+              <span aria-hidden="true">↺</span>
+            </button>
+          </div>
+
+          <div class="form-grid">
+            <label>
+              <span>Start date</span>
+              <input id="startDate" type="date">
+            </label>
+            <label>
+              <span>Post date</span>
+              <input id="postDate" type="date">
+            </label>
+          </div>
+
+          <div class="day-card" aria-live="polite">
+            <span id="dayNumber">Day 1</span>
+            <strong id="headlineText">Build the streak.</strong>
+          </div>
+
+          <div class="section-title">Today</div>
+          <div class="form-grid">
+            <label>
+              <span>Run / walk km</span>
+              <input id="runToday" type="number" min="0" step="0.01" inputmode="decimal">
+            </label>
+            <label>
+              <span>Push ups</span>
+              <input id="pushToday" type="number" min="0" step="1" inputmode="numeric">
+            </label>
+          </div>
+
+          <label>
+            <span>Other sport</span>
+            <input id="otherSport" type="text" placeholder="e.g. cycling 12 km, swim 500 m">
+          </label>
+
+          <label>
+            <span>Other activity</span>
+            <input id="otherActivity" type="text" placeholder="e.g. develop Astro web">
+          </label>
+
+          <div class="section-title">Totals</div>
+          <div class="form-grid">
+            <label>
+              <span>Run / walk total km</span>
+              <input id="runTotal" type="number" min="0" step="0.01" inputmode="decimal">
+            </label>
+            <label>
+              <span>Push ups total</span>
+              <input id="pushTotal" type="number" min="0" step="1" inputmode="numeric">
+            </label>
+          </div>
+
+          <div class="button-row">
+            <button id="saveEntryButton" class="primary-button" type="button">Save day</button>
+            <button id="copyCaptionButton" type="button">Copy caption</button>
+          </div>
+
+          <details class="import-box">
+            <summary>Import Strava CSV</summary>
+            <input id="stravaCsv" type="file" accept=".csv,text/csv">
+          </details>
+
+          <div class="section-title">Image</div>
+          <label>
+            <span>Photo</span>
+            <input id="imageInput" type="file" accept="image/*">
+          </label>
+
+          <div class="form-grid">
+            <label>
+              <span>Crop ratio</span>
+              <select id="ratioSelect">
+                <option value="4:5">4:5 portrait</option>
+                <option value="1:1">1:1 square</option>
+                <option value="16:9">16:9 landscape</option>
+                <option value="9:16">9:16 story</option>
+              </select>
+            </label>
+            <label>
+              <span>Credit</span>
+              <input id="creditText" type="text" value="@farrosfr | farrosfr.com">
+            </label>
+          </div>
+
+          <div class="button-row">
+            <button id="downloadButton" class="primary-button" type="button">Download image</button>
+            <button id="threadsButton" type="button">Open Threads</button>
+          </div>
+
+          <div class="button-row">
+            <button id="shareImageButton" type="button">Share image</button>
+            <button id="saveTemplateButton" type="button">Save template</button>
+          </div>
+        </aside>
+
+        <section class="preview-area" aria-label="Image preview">
+          <canvas id="previewCanvas" width="1080" height="1350"></canvas>
+          <div class="caption-panel">
+            <span>Caption preview</span>
+            <pre id="captionPreview"></pre>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
