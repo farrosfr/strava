@@ -40,6 +40,8 @@ The **Share image** button uses the browser's native share sheet with the genera
 
 The public site does not call Strava directly. GitHub Actions fetches Strava with repository secrets and writes a public summary file to `public/data/strava-summary.json`.
 
+Full PC setup guide: [STRAVA_SETUP.md](STRAVA_SETUP.md)
+
 Add these repository secrets:
 
 - `STRAVA_CLIENT_ID`
