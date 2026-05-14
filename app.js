@@ -9,6 +9,8 @@ const els = {
   pushToday: document.querySelector("#pushToday"),
   otherSport: document.querySelector("#otherSport"),
   otherActivity: document.querySelector("#otherActivity"),
+  quoteStyle: document.querySelector("#quoteStyle"),
+  customQuote: document.querySelector("#customQuote"),
   runTotal: document.querySelector("#runTotal"),
   pushTotal: document.querySelector("#pushTotal"),
   creditText: document.querySelector("#creditText"),
@@ -31,6 +33,8 @@ const state = {
   postDate: todayIso(),
   credit: "@farrosfr | farrosfr.com",
   ratio: "4:5",
+  quoteStyle: "you-vs-you",
+  customQuote: "",
   entries: {},
   importedRunByDate: {},
   image: null,
@@ -116,6 +120,8 @@ function syncInputsFromState() {
   els.postDate.value = state.postDate;
   els.creditText.value = state.credit;
   els.ratioSelect.value = state.ratio;
+  els.quoteStyle.value = state.quoteStyle;
+  els.customQuote.value = state.customQuote;
 
   const entry = getEntry();
   els.runToday.value = entry.runToday || "";
@@ -147,6 +153,8 @@ function saveCurrentEntry() {
   state.postDate = els.postDate.value || todayIso();
   state.credit = els.creditText.value.trim() || "@farrosfr | farrosfr.com";
   state.ratio = els.ratioSelect.value;
+  state.quoteStyle = els.quoteStyle.value;
+  state.customQuote = els.customQuote.value.trim();
   state.entries[state.postDate] = readEntryFromInputs();
   saveState();
   syncInputsFromState();
@@ -183,7 +191,21 @@ function buildCaption(day, entry, totals) {
 
   if (entry.otherSport) lines.push(`other sport: ${entry.otherSport}`);
   if (entry.otherActivity) lines.push(`other activity: ${entry.otherActivity}`);
+  lines.push("", getQuoteLine());
   return lines.join("\n");
+}
+
+function getQuoteLine() {
+  const custom = els.customQuote.value.trim();
+  const quotes = {
+    "you-vs-you": "You vs you. Every day.",
+    "one-percent": "1% chance is still a chance. Fight.",
+    "show-up": "No perfect day. Still show up.",
+    proof: "Proof over promises.",
+    discipline: "Discipline first. Mood later.",
+    custom: custom || "Keep promises to yourself.",
+  };
+  return quotes[els.quoteStyle.value] || quotes["you-vs-you"];
 }
 
 function ratioToSize(ratio) {
@@ -249,7 +271,7 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   ctx.shadowColor = "rgba(0,0,0,0.36)";
   ctx.shadowBlur = 18;
   ctx.fillStyle = "rgba(0,0,0,0.43)";
-  roundRect(ctx, pad, bottom - fontSize * 6.3, width - pad * 2, fontSize * 5.2, 8);
+  roundRect(ctx, pad, bottom - fontSize * 7.2, width - pad * 2, fontSize * 6.1, 8);
   ctx.fill();
   ctx.shadowBlur = 0;
 
@@ -257,7 +279,7 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   ctx.textBaseline = "top";
   ctx.textAlign = "left";
   ctx.font = `800 ${fontSize}px system-ui, sans-serif`;
-  ctx.fillText(`Day ${day}`, pad * 1.55, bottom - fontSize * 5.75);
+  ctx.fillText(`Day ${day}`, pad * 1.55, bottom - fontSize * 6.65);
 
   ctx.font = `700 ${smallSize}px system-ui, sans-serif`;
   const lines = [
@@ -268,8 +290,11 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   if (entry.otherActivity) lines.push(entry.otherActivity);
 
   lines.slice(0, 4).forEach((line, index) => {
-    ctx.fillText(line, pad * 1.55, bottom - fontSize * 4.35 + index * smallSize * 1.25);
+    ctx.fillText(line, pad * 1.55, bottom - fontSize * 5.25 + index * smallSize * 1.25);
   });
+
+  ctx.font = `800 ${smallSize}px system-ui, sans-serif`;
+  ctx.fillText(getQuoteLine(), pad * 1.55, bottom - smallSize * 1.45);
 
   ctx.textAlign = "right";
   ctx.font = `800 ${smallSize}px system-ui, sans-serif`;
@@ -453,6 +478,8 @@ function resetAll() {
   state.postDate = todayIso();
   state.credit = "@farrosfr | farrosfr.com";
   state.ratio = "4:5";
+  state.quoteStyle = "you-vs-you";
+  state.customQuote = "";
   state.entries = {};
   state.importedRunByDate = {};
   state.image = null;
@@ -466,6 +493,8 @@ function resetAll() {
   els.pushToday,
   els.otherSport,
   els.otherActivity,
+  els.quoteStyle,
+  els.customQuote,
   els.runTotal,
   els.pushTotal,
   els.creditText,
@@ -485,6 +514,8 @@ els.saveEntryButton.addEventListener("click", saveCurrentEntry);
 els.saveTemplateButton.addEventListener("click", () => {
   state.credit = els.creditText.value.trim() || state.credit;
   state.ratio = els.ratioSelect.value;
+  state.quoteStyle = els.quoteStyle.value;
+  state.customQuote = els.customQuote.value.trim();
   saveState();
 });
 els.copyCaptionButton.addEventListener("click", copyCaption);
