@@ -74,11 +74,17 @@ CSV import is still available as a fallback when the Strava workflow has not bee
 
 ## History Validation
 
-The app shows a **History** table under the preview. It merges:
+The app has a separate **History** page at:
+
+```text
+https://farrosfr.github.io/strava/history/
+```
+
+It merges:
 
 - Strava daily run/walk totals from `public/data/strava-summary.json`
 - saved push-up and activity entries from browser local storage
-- current unsaved form values for the selected post date
+- paginated rows for easier checking as the streak grows
 
 Use **Save day** after adding push-ups or manual activity so those values stay in the history table.
 

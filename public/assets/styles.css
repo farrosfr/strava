@@ -43,6 +43,14 @@ select {
   margin: 0 auto;
 }
 
+.history-page {
+  display: grid;
+  gap: 18px;
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
 .panel {
   background: var(--white);
   border: 1px solid var(--line);
@@ -270,6 +278,37 @@ button:hover {
   margin-bottom: 10px;
 }
 
+.history-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 12px;
+}
+
+.pager-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pager-controls span {
+  min-width: 92px;
+  color: var(--muted);
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-align: center;
+}
+
+button:disabled {
+  color: var(--muted);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
 .history-head span {
   color: var(--muted);
   font-size: 0.8rem;
@@ -345,6 +384,17 @@ pre {
   .button-row {
     align-items: stretch;
     flex-direction: column;
+  }
+
+  .brand-row,
+  .history-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .brand-actions,
+  .pager-controls {
+    flex-wrap: wrap;
   }
 
   h1 {

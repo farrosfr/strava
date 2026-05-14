@@ -21,8 +21,6 @@ const els = {
   stravaCsv: document.querySelector("#stravaCsv"),
   previewCanvas: document.querySelector("#previewCanvas"),
   captionPreview: document.querySelector("#captionPreview"),
-  historyBody: document.querySelector("#historyBody"),
-  historySummary: document.querySelector("#historySummary"),
   saveEntryButton: document.querySelector("#saveEntryButton"),
   copyCaptionButton: document.querySelector("#copyCaptionButton"),
   downloadButton: document.querySelector("#downloadButton"),
@@ -183,7 +181,6 @@ function updatePreview() {
   els.headlineText.textContent = entry.otherActivity || entry.otherSport || "Keep the streak moving.";
   els.captionPreview.textContent = caption;
   drawCanvas(day, entry, totals);
-  renderHistory();
 }
 
 async function loadStravaSummary() {
@@ -273,56 +270,6 @@ function getStravaDaily(summary = state.stravaSummary) {
     date,
     runWalkKm: roundForInput(runWalkKm),
   }));
-}
-
-function renderHistory() {
-  if (!els.historyBody || !els.historySummary) return;
-
-  const rows = buildHistoryRows();
-  els.historyBody.innerHTML = "";
-  rows.forEach((row) => {
-    const tr = document.createElement("tr");
-    [row.day, row.date, `${formatKm(row.runWalkKm)} km`, formatInt(row.pushToday), row.activity || "-"].forEach((value) => {
-      const td = document.createElement("td");
-      td.textContent = value;
-      tr.appendChild(td);
-    });
-    els.historyBody.appendChild(tr);
-  });
-
-  const runTotal = rows.reduce((sum, row) => sum + parseNumber(row.runWalkKm), 0);
-  const pushTotal = rows.reduce((sum, row) => sum + parseNumber(row.pushToday), 0);
-  els.historySummary.textContent = `${formatKm(runTotal)} km run/walk | ${formatInt(pushTotal)} push-ups`;
-}
-
-function buildHistoryRows() {
-  const startDate = els.startDate.value || state.startDate;
-  const postDate = els.postDate.value || state.postDate;
-  const dates = new Set([postDate]);
-  Object.keys(getAllManualEntries()).forEach((date) => dates.add(date));
-  Object.keys(state.importedRunByDate).forEach((date) => dates.add(date));
-  getStravaDaily().forEach((item) => dates.add(item.date));
-
-  const currentEntry = readEntryFromInputs();
-  const sortedDates = Array.from(dates)
-    .filter((date) => date >= startDate)
-    .sort((a, b) => a.localeCompare(b));
-
-  return sortedDates.map((date) => {
-    const saved = getManualEntry(date) || {};
-    const isCurrent = date === postDate;
-    const entry = isCurrent ? { ...saved, ...currentEntry } : saved;
-    const stravaRun = getStravaDaily().find((item) => item.date === date)?.runWalkKm;
-    const runWalkKm = stravaRun ?? state.importedRunByDate[date] ?? entry.runToday ?? 0;
-
-    return {
-      day: `Day ${dateDiffDays(startDate, date)}`,
-      date,
-      runWalkKm,
-      pushToday: entry.pushToday || 0,
-      activity: entry.otherActivity || entry.otherSport || "",
-    };
-  });
 }
 
 function formatSyncTimeWib(value) {
