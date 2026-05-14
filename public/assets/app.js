@@ -1,5 +1,6 @@
 const STORAGE_KEY = "daily-watermark-state-v1";
 const THREADS_TOPIC_NAME = "Running Threads";
+const STRAVA_PROFILE_URL = "https://www.strava.com/athletes/farrosfr";
 
 const els = {
   startDate: document.querySelector("#startDate"),
@@ -315,7 +316,7 @@ function formatSyncTimeWib(value) {
 
 function buildCaption(day, entry, totals) {
   const lines = [
-    `Day ${day}.`,
+    `Day ${day}: Hybrid Training`,
     "",
     `Run/walk: ${formatKm(entry.runToday)} km today | ${formatKm(totals.runTotal)} km total`,
     `Push-ups: ${formatInt(entry.pushToday)} today | ${formatInt(totals.pushTotal)} total`,
@@ -542,7 +543,11 @@ function openThreadsDraft() {
 }
 
 function buildThreadsShareText() {
-  return `${els.captionPreview.textContent}\n\n#${THREADS_TOPIC_NAME}`;
+  return `${els.captionPreview.textContent}\n\n#${THREADS_TOPIC_NAME}\n\n${buildStravaReplyText()}`;
+}
+
+function buildStravaReplyText() {
+  return `Connect on Strava:\n${STRAVA_PROFILE_URL}`;
 }
 
 function canvasToBlob(canvas) {
