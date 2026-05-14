@@ -412,7 +412,7 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   const creditSize = Math.max(18, Math.round(width * 0.017));
   const dividerX = padX + Math.round(width * 0.19);
   const statsX = dividerX + Math.round(width * 0.035);
-  const contentTop = y + topPad + Math.round(width * 0.018);
+  const contentTop = y + topPad + Math.round(width * 0.006);
   const subtextGap = Math.round(daySize * 1.08);
 
   ctx.save();
@@ -458,7 +458,7 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
 }
 
 function getWatermarkFooterHeight(width) {
-  return Math.round(width * 0.22);
+  return Math.round(width * 0.185);
 }
 
 function drawMetricTable(ctx, x, y, width, labelSize, valueSize, rows) {
