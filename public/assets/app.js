@@ -250,6 +250,12 @@ function getQuoteLine() {
     "show-up": "No perfect day. Still show up.",
     proof: "Proof over promises.",
     discipline: "Discipline first. Mood later.",
+    "hard-things": "Do the hard things.",
+    "embrace-difficult": "Embrace difficult. Build different.",
+    "earn-it": "Earn it in private.",
+    "comfort-zone": "Growth lives outside comfort.",
+    "quiet-work": "Quiet work. Loud results.",
+    standard: "Raise the standard. Repeat.",
     custom: custom || "Keep promises to yourself.",
   };
   return quotes[els.quoteStyle.value] || quotes["you-vs-you"];
