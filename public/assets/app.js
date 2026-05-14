@@ -45,11 +45,14 @@ const state = {
 };
 
 function todayIso() {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Jakarta",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).formatToParts(new Date());
+  const lookup = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${lookup.year}-${lookup.month}-${lookup.day}`;
 }
 
 function loadState() {
@@ -258,6 +261,10 @@ function applyStravaSummary(summary) {
   const runToday = parseNumber(summary.today?.runWalkKm);
   const runTotal = parseNumber(summary.total?.runWalkKm);
   const summaryDate = summary.date || todayIso();
+  if (summary.startDate) {
+    state.startDate = summary.startDate;
+    els.startDate.value = summary.startDate;
+  }
   state.importedRunByDate[summaryDate] = runToday;
   getStravaDaily(summary).forEach((item) => {
     state.importedRunByDate[item.date] = item.runWalkKm;
