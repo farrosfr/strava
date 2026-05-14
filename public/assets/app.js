@@ -384,7 +384,8 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   const creditSize = Math.max(18, Math.round(width * 0.017));
   const dividerX = padX + Math.round(width * 0.19);
   const statsX = dividerX + Math.round(width * 0.035);
-  const statsY = y + topPad + Math.round(width * 0.003);
+  const contentNudgeY = Math.round(width * 0.018);
+  const statsY = y + topPad + contentNudgeY;
 
   ctx.save();
   ctx.fillStyle = "#ffffff";
@@ -396,11 +397,11 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   ctx.textAlign = "left";
   ctx.fillStyle = "#111315";
   ctx.font = `900 ${daySize}px system-ui, sans-serif`;
-  ctx.fillText(`DAY ${day}`, padX, y + topPad);
+  ctx.fillText(`DAY ${day}`, padX, y + topPad + contentNudgeY);
 
   ctx.fillStyle = "#767b82";
   ctx.font = `800 ${quoteSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(getQuoteLine(), 23), padX, y + topPad + daySize * 1.08);
+  ctx.fillText(compactText(getQuoteLine(), 23), padX, y + topPad + contentNudgeY + daySize * 1.08);
 
   ctx.fillStyle = "#d8dadd";
   ctx.fillRect(dividerX, y + topPad, Math.max(2, Math.round(width * 0.002)), footerHeight - topPad * 2);
