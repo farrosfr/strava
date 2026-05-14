@@ -384,8 +384,8 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   const creditSize = Math.max(18, Math.round(width * 0.017));
   const dividerX = padX + Math.round(width * 0.19);
   const statsX = dividerX + Math.round(width * 0.035);
-  const contentNudgeY = Math.round(width * 0.018);
-  const statsY = y + topPad + contentNudgeY;
+  const contentTop = y + topPad + Math.round(width * 0.018);
+  const subtextGap = Math.round(daySize * 1.08);
 
   ctx.save();
   ctx.fillStyle = "#ffffff";
@@ -397,16 +397,16 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   ctx.textAlign = "left";
   ctx.fillStyle = "#111315";
   ctx.font = `900 ${daySize}px system-ui, sans-serif`;
-  ctx.fillText(`DAY ${day}`, padX, y + topPad + contentNudgeY);
+  ctx.fillText(`DAY ${day}`, padX, contentTop);
 
   ctx.fillStyle = "#767b82";
   ctx.font = `800 ${quoteSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(getQuoteLine(), 23), padX, y + topPad + contentNudgeY + daySize * 1.08);
+  ctx.fillText(compactText(getQuoteLine(), 23), padX, contentTop + subtextGap);
 
   ctx.fillStyle = "#d8dadd";
   ctx.fillRect(dividerX, y + topPad, Math.max(2, Math.round(width * 0.002)), footerHeight - topPad * 2);
 
-  drawMetricTable(ctx, statsX, statsY, width, labelSize, valueSize, [
+  drawMetricTable(ctx, statsX, contentTop, width, labelSize, valueSize, [
     ["RUN/WALK", `${formatKm(entry.runToday)} km`, `${formatKm(totals.runTotal)} km`],
     ["PUSH-UPS", formatInt(entry.pushToday), formatInt(totals.pushTotal)],
   ]);
@@ -422,10 +422,10 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   ctx.textAlign = "right";
   ctx.fillStyle = "#111315";
   ctx.font = `800 ${creditSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(credit.handle, 18), width - padX, y + topPad);
+  ctx.fillText(compactText(credit.handle, 18), width - padX, contentTop);
   ctx.fillStyle = "#767b82";
   ctx.font = `700 ${labelSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(credit.site, 18), width - padX, y + topPad + creditSize * 1.35);
+  ctx.fillText(compactText(credit.site, 18), width - padX, contentTop + creditSize * 1.35);
   ctx.restore();
 }
 
