@@ -1,5 +1,5 @@
 const STORAGE_KEY = "daily-watermark-state-v1";
-const THREADS_TOPIC_NAME = "Running Threads";
+const THREADS_TOPIC_NAME = "Running";
 const STRAVA_PROFILE_URL = "https://www.strava.com/athletes/farrosfr";
 
 const els = {
@@ -536,14 +536,15 @@ function downloadImage() {
   link.click();
 }
 
-function openThreadsDraft() {
+async function openThreadsDraft() {
   updatePreview();
+  await copyTextToClipboard(buildStravaReplyText());
   const text = encodeURIComponent(buildThreadsShareText());
   window.open(`https://www.threads.com/intent/post?text=${text}`, "_blank", "noopener,noreferrer");
 }
 
 function buildThreadsShareText() {
-  return `${els.captionPreview.textContent}\n\n#${THREADS_TOPIC_NAME}\n\n${buildStravaReplyText()}`;
+  return `${els.captionPreview.textContent}\n\n#${THREADS_TOPIC_NAME}`;
 }
 
 function buildStravaReplyText() {
@@ -558,6 +559,7 @@ function canvasToBlob(canvas) {
 
 async function shareImageDraft() {
   updatePreview();
+  await copyTextToClipboard(buildStravaReplyText());
   const blob = await canvasToBlob(els.previewCanvas);
   if (!blob) return;
 
@@ -582,11 +584,19 @@ async function shareImageDraft() {
 async function copyCaption() {
   updatePreview();
   const caption = els.captionPreview.textContent;
+  await copyTextToClipboard(caption);
+  els.copyCaptionButton.textContent = "Copied";
+  setTimeout(() => {
+    els.copyCaptionButton.textContent = "Copy caption";
+  }, 1200);
+}
+
+async function copyTextToClipboard(text) {
   if (navigator.clipboard && window.isSecureContext) {
-    await navigator.clipboard.writeText(caption);
+    await navigator.clipboard.writeText(text);
   } else {
     const textarea = document.createElement("textarea");
-    textarea.value = caption;
+    textarea.value = text;
     textarea.setAttribute("readonly", "");
     textarea.style.position = "fixed";
     textarea.style.left = "-9999px";
@@ -595,10 +605,6 @@ async function copyCaption() {
     document.execCommand("copy");
     textarea.remove();
   }
-  els.copyCaptionButton.textContent = "Copied";
-  setTimeout(() => {
-    els.copyCaptionButton.textContent = "Copy caption";
-  }, 1200);
 }
 
 function parseCsv(text) {
