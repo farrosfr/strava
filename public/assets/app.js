@@ -473,7 +473,7 @@ function drawTrainingStatRow(ctx, x, y, width, size, label, today, total) {
   const todayX = x + Math.round(width * 0.09);
   const separatorX = x + Math.round(width * 0.185);
   const totalLabelX = x + Math.round(width * 0.205);
-  const totalX = x + Math.round(width * 0.285);
+  const totalX = x + Math.round(width * 0.265);
 
   ctx.textAlign = "left";
   ctx.font = `750 ${size}px system-ui, sans-serif`;
