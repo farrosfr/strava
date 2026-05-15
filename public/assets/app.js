@@ -437,6 +437,7 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   drawFittedText(ctx, title, padX, titleY, width * 0.62, titleSize, 20, 900, "left");
 
   ctx.fillStyle = "#34383d";
+  drawTrainingStatSeparator(ctx, padX, runY, pushY, width, statSize);
   drawTrainingStatRow(
     ctx,
     padX,
@@ -471,7 +472,6 @@ function getWatermarkFooterHeight(width) {
 function drawTrainingStatRow(ctx, x, y, width, size, label, today, total) {
   const labelX = x;
   const todayX = x + Math.round(width * 0.09);
-  const separatorX = x + Math.round(width * 0.185);
   const totalLabelX = x + Math.round(width * 0.205);
   const totalX = x + Math.round(width * 0.265);
 
@@ -479,9 +479,18 @@ function drawTrainingStatRow(ctx, x, y, width, size, label, today, total) {
   ctx.font = `750 ${size}px system-ui, sans-serif`;
   ctx.fillText(label, labelX, y);
   ctx.fillText(today, todayX, y);
-  ctx.fillText("|", separatorX, y);
   ctx.fillText("Total", totalLabelX, y);
   ctx.fillText(total, totalX, y);
+}
+
+function drawTrainingStatSeparator(ctx, x, runY, pushY, width, size) {
+  const separatorX = x + Math.round(width * 0.19);
+  const top = runY - size * 0.65;
+  const height = pushY - runY + size * 1.3;
+
+  ctx.fillStyle = "#b9bec5";
+  ctx.fillRect(separatorX, top, Math.max(2, Math.round(width * 0.0015)), height);
+  ctx.fillStyle = "#34383d";
 }
 
 function compactText(text, limit) {
