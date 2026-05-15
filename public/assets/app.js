@@ -405,15 +405,15 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   const footerHeight = getWatermarkFooterHeight(width);
   const y = height - footerHeight;
   const padX = Math.round(width * 0.048);
-  const titleSize = Math.max(24, Math.round(width * 0.028));
-  const statSize = Math.max(17, Math.round(width * 0.017));
-  const handleSize = Math.max(18, Math.round(width * 0.018));
+  const titleSize = Math.max(26, Math.round(width * 0.03));
+  const statSize = Math.max(18, Math.round(width * 0.0185));
+  const handleSize = Math.max(19, Math.round(width * 0.019));
   const title = `Day ${day}: Hybrid Training`;
   const handle = splitCredit(els.creditText.value.trim() || state.credit).handle;
-  const titleY = y + Math.round(footerHeight * 0.29);
-  const runY = y + Math.round(footerHeight * 0.56);
-  const pushY = y + Math.round(footerHeight * 0.77);
-  const handleY = y + Math.round(footerHeight * 0.32);
+  const titleY = y + Math.round(footerHeight * 0.3);
+  const runY = y + Math.round(footerHeight * 0.55);
+  const pushY = y + Math.round(footerHeight * 0.745);
+  const handleY = y + Math.round(footerHeight * 0.33);
 
   ctx.save();
   ctx.fillStyle = "#ffffff";
