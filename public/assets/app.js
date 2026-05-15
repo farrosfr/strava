@@ -407,8 +407,8 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   const padX = Math.round(width * 0.048);
   const titleSize = Math.max(26, Math.round(width * 0.029));
   const metaSize = Math.max(18, Math.round(width * 0.02));
-  const title = `DAY ${day}: HYBRID TRAINING • ${splitCredit(els.creditText.value.trim() || state.credit).handle}`;
-  const meta = `RUN ${formatKm(entry.runToday)} KM   TOTAL ${formatKm(totals.runTotal)} KM   PUSH ${formatInt(entry.pushToday)}/${formatInt(totals.pushTotal)}`;
+  const title = `Day ${day}: Hybrid Training • ${splitCredit(els.creditText.value.trim() || state.credit).handle}`;
+  const meta = `Run ${formatKm(entry.runToday)} km   Total ${formatKm(totals.runTotal)} km   Push-ups ${formatInt(entry.pushToday)}/${formatInt(totals.pushTotal)}`;
   const contentY = y + footerHeight / 2;
 
   ctx.save();
