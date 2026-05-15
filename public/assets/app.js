@@ -119,6 +119,7 @@ function getEntryForTotals(date) {
 function getKnownDatesThrough(date) {
   return Array.from(
     new Set([
+      date,
       ...Object.keys(state.importedRunByDate),
       ...Object.keys(state.entries),
       ...Object.keys(getManualEntriesFromFile()),
@@ -141,6 +142,16 @@ function calculateTotals(date = state.postDate) {
   return {
     runTotal: importedRun,
     pushTotal: manualPush,
+  };
+}
+
+function calculatePreviewTotals(date, currentEntry) {
+  const totals = calculateTotals(date);
+  const savedCurrent = getEntryForTotals(date);
+  const currentRunFromStrava = parseNumber(state.importedRunByDate[date]);
+  return {
+    runTotal: totals.runTotal - parseNumber(savedCurrent.runToday) + (currentRunFromStrava || parseNumber(currentEntry.runToday)),
+    pushTotal: totals.pushTotal - parseNumber(savedCurrent.pushToday) + parseNumber(currentEntry.pushToday),
   };
 }
 
@@ -191,16 +202,11 @@ function saveCurrentEntry() {
 
 function updatePreview() {
   const entry = readEntryFromInputs();
-  const explicitTotals = {
-    runTotal: parseNumber(els.runTotal.value),
-    pushTotal: parseNumber(els.pushTotal.value),
-  };
-  const calculated = calculateTotals();
-  const totals = {
-    runTotal: explicitTotals.runTotal || calculated.runTotal,
-    pushTotal: explicitTotals.pushTotal || calculated.pushTotal,
-  };
-  const day = dateDiffDays(els.startDate.value || state.startDate, els.postDate.value || state.postDate);
+  const postDate = els.postDate.value || state.postDate;
+  const totals = calculatePreviewTotals(postDate, entry);
+  els.runTotal.value = totals.runTotal ? roundForInput(totals.runTotal) : "";
+  els.pushTotal.value = totals.pushTotal ? Math.round(totals.pushTotal) : "";
+  const day = dateDiffDays(els.startDate.value || state.startDate, postDate);
   const caption = buildCaption(day, entry, totals);
 
   els.dayNumber.textContent = `Day ${day}`;
