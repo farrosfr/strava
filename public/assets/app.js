@@ -405,95 +405,61 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   const footerHeight = getWatermarkFooterHeight(width);
   const y = height - footerHeight;
   const padX = Math.round(width * 0.048);
-  const topPad = Math.round(width * 0.03);
-  const daySize = Math.max(38, Math.round(width * 0.042));
-  const labelSize = Math.max(14, Math.round(width * 0.0125));
-  const valueSize = Math.max(21, Math.round(width * 0.021));
-  const quoteSize = Math.max(17, Math.round(width * 0.016));
-  const creditSize = Math.max(18, Math.round(width * 0.017));
-  const dividerX = padX + Math.round(width * 0.19);
-  const statsX = dividerX + Math.round(width * 0.035);
-  const contentTop = y + topPad + Math.round(width * 0.006);
-  const subtextGap = Math.round(daySize * 1.08);
+  const titleSize = Math.max(26, Math.round(width * 0.029));
+  const metaSize = Math.max(18, Math.round(width * 0.02));
+  const title = `DAY ${day}: HYBRID TRAINING • ${splitCredit(els.creditText.value.trim() || state.credit).handle}`;
+  const meta = `RUN ${formatKm(entry.runToday)} KM   TOTAL ${formatKm(totals.runTotal)} KM   PUSH ${formatInt(entry.pushToday)}/${formatInt(totals.pushTotal)}`;
+  const contentY = y + footerHeight / 2;
 
   ctx.save();
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, y, width, footerHeight);
+
   ctx.fillStyle = "#f1f2f4";
+  ctx.beginPath();
+  ctx.moveTo(width * 0.56, height);
+  ctx.bezierCurveTo(width * 0.64, y + footerHeight * 0.78, width * 0.66, y + footerHeight * 0.32, width * 0.74, y);
+  ctx.lineTo(width, y);
+  ctx.lineTo(width, height);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.fillStyle = "#e5e7eb";
   ctx.fillRect(0, y, width, Math.max(2, Math.round(width * 0.002)));
 
-  ctx.textBaseline = "top";
+  ctx.textBaseline = "middle";
   ctx.textAlign = "left";
   ctx.fillStyle = "#111315";
-  ctx.font = `900 ${daySize}px system-ui, sans-serif`;
-  ctx.fillText(`DAY ${day}`, padX, contentTop);
+  drawFittedText(ctx, title, padX, contentY, width * 0.5, titleSize, 22, 900, "left");
 
-  ctx.fillStyle = "#767b82";
-  ctx.font = `800 ${quoteSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(getQuoteLine(), 23), padX, contentTop + subtextGap);
-
-  ctx.fillStyle = "#d8dadd";
-  ctx.fillRect(dividerX, y + topPad, Math.max(2, Math.round(width * 0.002)), footerHeight - topPad * 2);
-
-  drawMetricTable(ctx, statsX, contentTop, width, labelSize, valueSize, [
-    ["RUN/WALK", `${formatKm(entry.runToday)} km`, `${formatKm(totals.runTotal)} km`],
-    ["PUSH-UPS", formatInt(entry.pushToday), formatInt(totals.pushTotal)],
-  ]);
-
-  const activity = compactText(entry.otherActivity || entry.otherSport, 34);
-  if (activity) {
-    ctx.fillStyle = "#4d535a";
-    ctx.font = `800 ${labelSize}px system-ui, sans-serif`;
-    ctx.fillText(activity.toUpperCase(), statsX, y + footerHeight - topPad - labelSize * 1.05);
-  }
-
-  const credit = splitCredit(els.creditText.value.trim() || state.credit);
   ctx.textAlign = "right";
   ctx.fillStyle = "#111315";
-  ctx.font = `800 ${creditSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(credit.handle, 18), width - padX, contentTop);
-  ctx.fillStyle = "#767b82";
-  ctx.font = `700 ${labelSize}px system-ui, sans-serif`;
-  ctx.fillText(compactText(credit.site, 18), width - padX, contentTop + creditSize * 1.35);
+  drawFittedText(ctx, meta, width - padX, contentY, width * 0.42, metaSize, 16, 800, "right");
   ctx.restore();
 }
 
 function getWatermarkFooterHeight(width) {
-  return Math.round(width * 0.185);
-}
-
-function drawMetricTable(ctx, x, y, width, labelSize, valueSize, rows) {
-  const metricColWidth = Math.round(width * 0.13);
-  const todayX = x + metricColWidth;
-  const totalX = todayX + Math.round(width * 0.13);
-  const headerY = y;
-  const firstRowY = y + labelSize * 1.95;
-  const rowGap = valueSize * 1.65;
-
-  ctx.textAlign = "left";
-  ctx.fillStyle = "#9aa0a6";
-  ctx.font = `800 ${labelSize}px system-ui, sans-serif`;
-  ctx.fillText("TODAY", todayX, headerY);
-  ctx.fillText("TOTAL", totalX, headerY);
-
-  rows.forEach(([label, today, total], index) => {
-    const rowY = firstRowY + rowGap * index;
-
-    ctx.fillStyle = "#767b82";
-    ctx.font = `800 ${labelSize}px system-ui, sans-serif`;
-    ctx.fillText(label, x, rowY + valueSize * 0.12);
-
-    ctx.fillStyle = "#111315";
-    ctx.font = `800 ${valueSize}px system-ui, sans-serif`;
-    ctx.fillText(compactText(today, 12), todayX, rowY);
-    ctx.fillText(compactText(total, 12), totalX, rowY);
-  });
+  return Math.round(width * 0.125);
 }
 
 function compactText(text, limit) {
   const clean = String(text || "").replace(/\s+/g, " ").trim();
   if (clean.length <= limit) return clean;
   return `${clean.slice(0, Math.max(0, limit - 1)).trim()}...`;
+}
+
+function drawFittedText(ctx, text, x, y, maxWidth, preferredSize, minSize, weight, align = "left") {
+  const clean = String(text || "").replace(/\s+/g, " ").trim();
+  let size = preferredSize;
+  ctx.textAlign = align;
+  ctx.font = `${weight} ${size}px system-ui, sans-serif`;
+
+  while (size > minSize && ctx.measureText(clean).width > maxWidth) {
+    size -= 1;
+    ctx.font = `${weight} ${size}px system-ui, sans-serif`;
+  }
+
+  ctx.fillText(clean, x, y);
 }
 
 function splitCredit(value) {
