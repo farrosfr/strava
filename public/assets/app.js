@@ -405,11 +405,17 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   const footerHeight = getWatermarkFooterHeight(width);
   const y = height - footerHeight;
   const padX = Math.round(width * 0.048);
-  const titleSize = Math.max(26, Math.round(width * 0.029));
-  const metaSize = Math.max(18, Math.round(width * 0.02));
-  const title = `Day ${day}: Hybrid Training • ${splitCredit(els.creditText.value.trim() || state.credit).handle}`;
-  const meta = `Run ${formatKm(entry.runToday)} km   Total ${formatKm(totals.runTotal)} km   Push-ups ${formatInt(entry.pushToday)}/${formatInt(totals.pushTotal)}`;
-  const contentY = y + footerHeight / 2;
+  const titleSize = Math.max(24, Math.round(width * 0.028));
+  const statSize = Math.max(17, Math.round(width * 0.017));
+  const handleSize = Math.max(18, Math.round(width * 0.018));
+  const title = `Day ${day}: Hybrid Training`;
+  const runLine = `Run/walk ${formatKm(entry.runToday)} km | Total ${formatKm(totals.runTotal)} km`;
+  const pushLine = `Push-ups ${formatInt(entry.pushToday)} | Total ${formatInt(totals.pushTotal)}`;
+  const handle = splitCredit(els.creditText.value.trim() || state.credit).handle;
+  const titleY = y + Math.round(footerHeight * 0.29);
+  const runY = y + Math.round(footerHeight * 0.56);
+  const pushY = y + Math.round(footerHeight * 0.77);
+  const handleY = y + Math.round(footerHeight * 0.32);
 
   ctx.save();
   ctx.fillStyle = "#ffffff";
@@ -430,16 +436,20 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   ctx.textBaseline = "middle";
   ctx.textAlign = "left";
   ctx.fillStyle = "#111315";
-  drawFittedText(ctx, title, padX, contentY, width * 0.5, titleSize, 22, 900, "left");
+  drawFittedText(ctx, title, padX, titleY, width * 0.62, titleSize, 20, 900, "left");
+
+  ctx.fillStyle = "#34383d";
+  drawFittedText(ctx, runLine, padX, runY, width * 0.62, statSize, 14, 750, "left");
+  drawFittedText(ctx, pushLine, padX, pushY, width * 0.62, statSize, 14, 750, "left");
 
   ctx.textAlign = "right";
   ctx.fillStyle = "#111315";
-  drawFittedText(ctx, meta, width - padX, contentY, width * 0.42, metaSize, 16, 800, "right");
+  drawFittedText(ctx, handle, width - padX, handleY, width * 0.25, handleSize, 15, 800, "right");
   ctx.restore();
 }
 
 function getWatermarkFooterHeight(width) {
-  return Math.round(width * 0.125);
+  return Math.round(width * 0.145);
 }
 
 function compactText(text, limit) {
