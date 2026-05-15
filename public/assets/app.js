@@ -409,8 +409,6 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   const statSize = Math.max(17, Math.round(width * 0.017));
   const handleSize = Math.max(18, Math.round(width * 0.018));
   const title = `Day ${day}: Hybrid Training`;
-  const runLine = `Run/walk ${formatKm(entry.runToday)} km | Total ${formatKm(totals.runTotal)} km`;
-  const pushLine = `Push-ups ${formatInt(entry.pushToday)} | Total ${formatInt(totals.pushTotal)}`;
   const handle = splitCredit(els.creditText.value.trim() || state.credit).handle;
   const titleY = y + Math.round(footerHeight * 0.29);
   const runY = y + Math.round(footerHeight * 0.56);
@@ -439,8 +437,26 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   drawFittedText(ctx, title, padX, titleY, width * 0.62, titleSize, 20, 900, "left");
 
   ctx.fillStyle = "#34383d";
-  drawFittedText(ctx, runLine, padX, runY, width * 0.62, statSize, 14, 750, "left");
-  drawFittedText(ctx, pushLine, padX, pushY, width * 0.62, statSize, 14, 750, "left");
+  drawTrainingStatRow(
+    ctx,
+    padX,
+    runY,
+    width,
+    statSize,
+    "Run/walk",
+    `${formatKm(entry.runToday)} km`,
+    `${formatKm(totals.runTotal)} km`,
+  );
+  drawTrainingStatRow(
+    ctx,
+    padX,
+    pushY,
+    width,
+    statSize,
+    "Push-ups",
+    formatInt(entry.pushToday),
+    formatInt(totals.pushTotal),
+  );
 
   ctx.textAlign = "right";
   ctx.fillStyle = "#111315";
@@ -450,6 +466,22 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
 
 function getWatermarkFooterHeight(width) {
   return Math.round(width * 0.145);
+}
+
+function drawTrainingStatRow(ctx, x, y, width, size, label, today, total) {
+  const labelX = x;
+  const todayX = x + Math.round(width * 0.14);
+  const separatorX = x + Math.round(width * 0.235);
+  const totalLabelX = x + Math.round(width * 0.255);
+  const totalX = x + Math.round(width * 0.335);
+
+  ctx.textAlign = "left";
+  ctx.font = `750 ${size}px system-ui, sans-serif`;
+  ctx.fillText(label, labelX, y);
+  ctx.fillText(today, todayX, y);
+  ctx.fillText("|", separatorX, y);
+  ctx.fillText("Total", totalLabelX, y);
+  ctx.fillText(total, totalX, y);
 }
 
 function compactText(text, limit) {
