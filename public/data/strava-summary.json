@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-05-16T07:21:17.538Z",
+  "updatedAt": "2026-05-16T09:12:35.720Z",
   "date": "2026-05-16",
   "timezone": "Asia/Jakarta",
   "startDate": "2026-05-14",
   "source": "strava",
   "today": {
-    "runWalkKm": 5.98
+    "runWalkKm": 7.23
   },
   "total": {
-    "runWalkKm": 12.78
+    "runWalkKm": 14.03
   },
   "daily": [
     {
@@ -21,7 +21,7 @@
     },
     {
       "date": "2026-05-16",
-      "runWalkKm": 5.98
+      "runWalkKm": 7.23
     }
   ],
   "activities": [
@@ -59,6 +59,13 @@
       "type": "Run",
       "date": "2026-05-16",
       "distanceKm": 5.98
+    },
+    {
+      "id": 18525394803,
+      "name": "Afternoon Run",
+      "type": "Run",
+      "date": "2026-05-16",
+      "distanceKm": 1.25
     }
   ]
 }
