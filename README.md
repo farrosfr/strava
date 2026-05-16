@@ -94,7 +94,7 @@ Shared manual data lives in `public/data/manual-log.json`. Edit it from:
 https://farrosfr.github.io/strava/admin/
 ```
 
-Sveltia CMS commits changes to GitHub, so push-ups and manual activity are available from every device after the site redeploys. The in-app **Save day** button remains useful for local drafts, but CMS data is the shared source.
+Sveltia CMS commits changes to GitHub, so push-ups and manual activity are available from every device after the site redeploys. Manual Log is configured as a singleton so it opens directly in the CMS sidebar. New entries are added to the top, and the date field defaults to today.
 
 ## GitHub Pages
 

@@ -96,6 +96,12 @@ function dateDiffDays(fromIso, toIso) {
   return Math.max(1, Math.floor((to - from) / 86400000) + 1);
 }
 
+function normalizeDate(value) {
+  const raw = String(value || "").trim();
+  const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return match ? `${match[1]}-${match[2]}-${match[3]}` : raw;
+}
+
 function getEntry(date = state.postDate) {
   const localEntry = state.entries[date] || {};
   const manualEntry = getManualEntry(date) || {};
@@ -243,8 +249,9 @@ async function loadManualLog() {
 function getManualEntriesFromFile() {
   const entries = {};
   (state.manualLog?.entries || []).forEach((entry) => {
-    if (!entry.date) return;
-    entries[entry.date] = {
+    const date = normalizeDate(entry.date);
+    if (!date) return;
+    entries[date] = {
       pushToday: parseNumber(entry.pushUps),
       otherSport: entry.otherSport || "",
       otherActivity: entry.otherActivity || "",

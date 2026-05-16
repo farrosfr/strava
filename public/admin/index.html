@@ -6,6 +6,11 @@
     <title>Daily Watermark Admin</title>
   </head>
   <body>
+    <script>
+      if (!window.location.hash) {
+        window.location.hash = "/collections/_singletons/entries/manual_log";
+      }
+    </script>
     <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
   </body>
 </html>

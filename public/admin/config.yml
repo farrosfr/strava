@@ -6,34 +6,37 @@ backend:
 media_folder: public/uploads
 public_folder: /strava/uploads
 
-collections:
-  - name: data
-    label: Data
-    files:
-      - name: manual_log
-        label: Manual Log
-        file: public/data/manual-log.json
+singletons:
+  - name: manual_log
+    label: Manual Log
+    file: public/data/manual-log.json
+    icon: list_alt
+    fields:
+      - label: Entries
+        label_singular: Day
+        name: entries
+        widget: list
+        summary: "{{fields.date}} - {{fields.pushUps}} push-ups"
+        add_to_top: true
+        collapsed: auto
+        minimize_collapsed: auto
         fields:
-          - label: Entries
-            name: entries
-            widget: list
-            summary: "{{fields.date}} - {{fields.pushUps}} push-ups"
-            fields:
-              - label: Date
-                name: date
-                widget: string
-                hint: Use YYYY-MM-DD, for example 2026-05-14.
-              - label: Push-ups
-                name: pushUps
-                widget: number
-                value_type: int
-                min: 0
-                default: 0
-              - label: Other sport
-                name: otherSport
-                widget: string
-                required: false
-              - label: Other activity
-                name: otherActivity
-                widget: string
-                required: false
+          - label: Date
+            name: date
+            widget: datetime
+            type: date
+            default: "{{now}}"
+          - label: Push-ups
+            name: pushUps
+            widget: number
+            value_type: int
+            min: 0
+            default: 0
+          - label: Other sport
+            name: otherSport
+            widget: string
+            required: false
+          - label: Other activity
+            name: otherActivity
+            widget: string
+            required: false

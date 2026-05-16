@@ -36,6 +36,12 @@ function dateDiffDays(fromIso, toIso) {
   return Math.max(1, Math.floor((to - from) / 86400000) + 1);
 }
 
+function normalizeDate(value) {
+  const raw = String(value || "").trim();
+  const match = raw.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return match ? `${match[1]}-${match[2]}-${match[3]}` : raw;
+}
+
 async function loadJson(path, fallback) {
   try {
     const response = await fetch(`${path}?ts=${Date.now()}`);
@@ -68,7 +74,7 @@ function buildRows(stravaSummary, manualLog) {
   const stravaByDate = new Map(getStravaDaily(stravaSummary).map((item) => [item.date, item.runWalkKm]));
   const manualByDate = new Map(
     (manualLog.entries || []).map((entry) => [
-      entry.date,
+      normalizeDate(entry.date),
       {
         pushToday: parseNumber(entry.pushUps),
         activity: entry.otherActivity || entry.otherSport || "",
