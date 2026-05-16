@@ -418,9 +418,9 @@ function drawWatermark(ctx, width, height, day, entry, totals) {
   const footerHeight = getWatermarkFooterHeight(width);
   const y = height - footerHeight;
   const padX = Math.round(width * 0.048);
-  const titleSize = Math.max(26, Math.round(width * 0.03));
-  const statSize = Math.max(18, Math.round(width * 0.0185));
-  const handleSize = Math.max(19, Math.round(width * 0.019));
+  const titleSize = Math.max(28, Math.round(width * 0.032));
+  const statSize = Math.max(19, Math.round(width * 0.02));
+  const handleSize = Math.max(20, Math.round(width * 0.0205));
   const title = `Day ${day}: Hybrid Training`;
   const handle = splitCredit(els.creditText.value.trim() || state.credit).handle;
   const titleY = y + Math.round(footerHeight * 0.3);
