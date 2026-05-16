@@ -484,7 +484,7 @@ function getWatermarkFooterHeight(width) {
 
 function drawTrainingStatRow(ctx, x, y, width, size, label, today, total) {
   const labelX = x;
-  const todayX = x + Math.round(width * 0.105);
+  const todayX = x + Math.round(width * 0.103);
   const totalLabelX = x + Math.round(width * 0.215);
   const totalX = x + Math.round(width * 0.275);
 
