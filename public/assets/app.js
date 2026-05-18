@@ -43,6 +43,8 @@ const state = {
   stravaSummary: null,
   manualLog: null,
   image: null,
+  cropOffsetX: 0.5,
+  cropOffsetY: 0.5,
 };
 
 function todayIso() {
@@ -405,10 +407,10 @@ function drawCoverImage(ctx, image, width, height) {
 
   if (imageRatio > canvasRatio) {
     sourceWidth = image.naturalHeight * canvasRatio;
-    sourceX = (image.naturalWidth - sourceWidth) / 2;
+    sourceX = (image.naturalWidth - sourceWidth) * state.cropOffsetX;
   } else {
     sourceHeight = image.naturalWidth / canvasRatio;
-    sourceY = (image.naturalHeight - sourceHeight) / 2;
+    sourceY = (image.naturalHeight - sourceHeight) * state.cropOffsetY;
   }
 
   ctx.drawImage(image, sourceX, sourceY, sourceWidth, sourceHeight, 0, 0, width, height);
@@ -551,6 +553,9 @@ function readImage(file) {
     const image = new Image();
     image.onload = () => {
       state.image = image;
+      state.cropOffsetX = 0.5;
+      state.cropOffsetY = 0.5;
+      els.previewCanvas.style.touchAction = "none";
       updatePreview();
     };
     image.src = reader.result;
@@ -729,6 +734,7 @@ function resetAll() {
   state.entries = {};
   state.importedRunByDate = {};
   state.image = null;
+  els.previewCanvas.style.touchAction = "auto";
   syncInputsFromState();
 }
 
@@ -771,6 +777,65 @@ els.shareImageButton.addEventListener("click", shareImageDraft);
 els.resetButton.addEventListener("click", resetAll);
 els.imageInput.addEventListener("change", (event) => readImage(event.target.files[0]));
 els.stravaCsv.addEventListener("change", (event) => importStravaCsv(event.target.files[0]));
+
+let isDragging = false;
+let startDragX = 0;
+let startDragY = 0;
+
+els.previewCanvas.addEventListener("mousedown", (e) => {
+  if (!state.image) return;
+  isDragging = true;
+  startDragX = e.clientX;
+  startDragY = e.clientY;
+  els.previewCanvas.style.cursor = "grabbing";
+});
+
+els.previewCanvas.addEventListener("mousemove", (e) => {
+  if (!isDragging || !state.image) return;
+  const dx = e.clientX - startDragX;
+  const dy = e.clientY - startDragY;
+  startDragX = e.clientX;
+  startDragY = e.clientY;
+
+  const sensitivity = 0.005;
+  state.cropOffsetX = Math.max(0, Math.min(1, state.cropOffsetX - dx * sensitivity));
+  state.cropOffsetY = Math.max(0, Math.min(1, state.cropOffsetY - dy * sensitivity));
+  
+  updatePreview();
+});
+
+window.addEventListener("mouseup", () => {
+  isDragging = false;
+  els.previewCanvas.style.cursor = "grab";
+});
+
+els.previewCanvas.addEventListener("touchstart", (e) => {
+  if (!state.image || e.touches.length !== 1) return;
+  isDragging = true;
+  startDragX = e.touches[0].clientX;
+  startDragY = e.touches[0].clientY;
+});
+
+els.previewCanvas.addEventListener("touchmove", (e) => {
+  if (!isDragging || !state.image || e.touches.length !== 1) return;
+  e.preventDefault(); 
+  const dx = e.touches[0].clientX - startDragX;
+  const dy = e.touches[0].clientY - startDragY;
+  startDragX = e.touches[0].clientX;
+  startDragY = e.touches[0].clientY;
+
+  const sensitivity = 0.005;
+  state.cropOffsetX = Math.max(0, Math.min(1, state.cropOffsetX - dx * sensitivity));
+  state.cropOffsetY = Math.max(0, Math.min(1, state.cropOffsetY - dy * sensitivity));
+  
+  updatePreview();
+}, { passive: false });
+
+window.addEventListener("touchend", () => {
+  isDragging = false;
+});
+
+els.previewCanvas.style.cursor = "grab";
 
 loadState();
 syncInputsFromState();
