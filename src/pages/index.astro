@@ -34,6 +34,18 @@ const base = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL :
             <small id="stravaStatus"></small>
           </div>
 
+          <div class="day-navigator" aria-label="Preview another day">
+            <label>
+              <span>Post date</span>
+              <input id="postDate" type="date">
+            </label>
+            <div class="pager-controls">
+              <button id="prevDayButton" type="button">Previous day</button>
+              <button id="todayButton" type="button">Today</button>
+              <button id="nextDayButton" type="button">Next day</button>
+            </div>
+          </div>
+
           <label>
             <span>Photo</span>
             <input id="imageInput" type="file" accept="image/*">
@@ -78,10 +90,6 @@ const base = import.meta.env.BASE_URL.endsWith("/") ? import.meta.env.BASE_URL :
                 <label>
                   <span>Start date</span>
                   <input id="startDate" type="date">
-                </label>
-                <label>
-                  <span>Post date</span>
-                  <input id="postDate" type="date">
                 </label>
               </div>
 

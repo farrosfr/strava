@@ -211,6 +211,15 @@ button:hover {
   font-weight: 700;
 }
 
+.day-navigator {
+  display: grid;
+  gap: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  padding: 12px;
+}
+
 .import-box,
 .advanced-box {
   border: 1px solid var(--line);

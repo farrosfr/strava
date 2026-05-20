@@ -22,6 +22,9 @@ const els = {
   stravaCsv: document.querySelector("#stravaCsv"),
   previewCanvas: document.querySelector("#previewCanvas"),
   captionPreview: document.querySelector("#captionPreview"),
+  prevDayButton: document.querySelector("#prevDayButton"),
+  todayButton: document.querySelector("#todayButton"),
+  nextDayButton: document.querySelector("#nextDayButton"),
   saveEntryButton: document.querySelector("#saveEntryButton"),
   copyCaptionButton: document.querySelector("#copyCaptionButton"),
   downloadButton: document.querySelector("#downloadButton"),
@@ -96,6 +99,15 @@ function dateDiffDays(fromIso, toIso) {
   const from = new Date(`${fromIso}T00:00:00`);
   const to = new Date(`${toIso}T00:00:00`);
   return Math.max(1, Math.floor((to - from) / 86400000) + 1);
+}
+
+function addDaysIso(dateIso, days) {
+  const date = new Date(`${dateIso}T00:00:00`);
+  date.setDate(date.getDate() + days);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 function normalizeDate(value) {
@@ -221,6 +233,28 @@ function updatePreview() {
   els.headlineText.textContent = entry.otherActivity || entry.otherSport || "Keep the streak moving.";
   els.captionPreview.textContent = caption;
   drawCanvas(day, entry, totals);
+  updateDayNavigator(postDate);
+}
+
+function updateDayNavigator(postDate) {
+  if (!els.prevDayButton || !els.nextDayButton || !els.todayButton) return;
+  const startDate = els.startDate.value || state.startDate;
+  const today = todayIso();
+  els.prevDayButton.disabled = postDate <= startDate;
+  els.nextDayButton.disabled = postDate >= today;
+  els.todayButton.disabled = postDate === today;
+}
+
+function setPostDate(date) {
+  const today = todayIso();
+  const startDate = els.startDate.value || state.startDate;
+  const normalized = normalizeDate(date) || today;
+  state.postDate = normalized < startDate ? startDate : normalized > today ? today : normalized;
+  syncInputsFromState();
+}
+
+function shiftPostDate(days) {
+  setPostDate(addDaysIso(els.postDate.value || state.postDate || todayIso(), days));
 }
 
 async function loadStravaSummary() {
@@ -754,9 +788,11 @@ function resetAll() {
 ].forEach((input) => input.addEventListener("input", updatePreview));
 
 els.postDate.addEventListener("change", () => {
-  state.postDate = els.postDate.value || todayIso();
-  syncInputsFromState();
+  setPostDate(els.postDate.value);
 });
+els.prevDayButton.addEventListener("click", () => shiftPostDate(-1));
+els.todayButton.addEventListener("click", () => setPostDate(todayIso()));
+els.nextDayButton.addEventListener("click", () => shiftPostDate(1));
 els.startDate.addEventListener("change", () => {
   state.startDate = els.startDate.value || todayIso();
   saveState();
