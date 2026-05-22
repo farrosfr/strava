@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-05-22T06:13:13.872Z",
+  "updatedAt": "2026-05-22T09:57:33.924Z",
   "date": "2026-05-22",
   "timezone": "Asia/Jakarta",
   "startDate": "2026-05-14",
   "source": "strava",
   "today": {
-    "runWalkKm": 0
+    "runWalkKm": 1.67
   },
   "total": {
-    "runWalkKm": 28.74
+    "runWalkKm": 30.41
   },
   "daily": [
     {
@@ -34,6 +34,10 @@
     {
       "date": "2026-05-20",
       "runWalkKm": 2.3
+    },
+    {
+      "date": "2026-05-22",
+      "runWalkKm": 1.67
     }
   ],
   "activities": [
@@ -127,6 +131,13 @@
       "type": "Run",
       "date": "2026-05-20",
       "distanceKm": 2.3
+    },
+    {
+      "id": 18605122995,
+      "name": "Lunch Run",
+      "type": "Run",
+      "date": "2026-05-22",
+      "distanceKm": 1.67
     }
   ]
 }
