@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-05-27T00:12:32.381Z",
+  "updatedAt": "2026-05-27T04:56:44.659Z",
   "date": "2026-05-27",
   "timezone": "Asia/Jakarta",
   "startDate": "2026-05-14",
   "source": "strava",
   "today": {
-    "runWalkKm": 0
+    "runWalkKm": 2.68
   },
   "total": {
-    "runWalkKm": 49.82
+    "runWalkKm": 52.5
   },
   "daily": [
     {
@@ -50,6 +50,10 @@
     {
       "date": "2026-05-25",
       "runWalkKm": 0.69
+    },
+    {
+      "date": "2026-05-27",
+      "runWalkKm": 2.68
     }
   ],
   "activities": [
@@ -206,6 +210,13 @@
       "type": "Run",
       "date": "2026-05-25",
       "distanceKm": 0.69
+    },
+    {
+      "id": 18668991890,
+      "name": "Morning Run",
+      "type": "Run",
+      "date": "2026-05-27",
+      "distanceKm": 2.68
     }
   ]
 }
