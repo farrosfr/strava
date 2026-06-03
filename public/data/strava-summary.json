@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-06-03T12:02:04.552Z",
-  "date": "2026-06-03",
+  "updatedAt": "2026-06-03T17:28:07.796Z",
+  "date": "2026-06-04",
   "timezone": "Asia/Jakarta",
   "startDate": "2026-05-14",
   "source": "strava",
@@ -8,7 +8,7 @@
     "runWalkKm": 0
   },
   "total": {
-    "runWalkKm": 76.19
+    "runWalkKm": 77.52
   },
   "daily": [
     {
@@ -74,6 +74,10 @@
     {
       "date": "2026-06-02",
       "runWalkKm": 1
+    },
+    {
+      "date": "2026-06-03",
+      "runWalkKm": 1.33
     }
   ],
   "activities": [
@@ -307,6 +311,13 @@
       "type": "Run",
       "date": "2026-06-02",
       "distanceKm": 1
+    },
+    {
+      "id": 18769142366,
+      "name": "Evening Run",
+      "type": "Run",
+      "date": "2026-06-03",
+      "distanceKm": 1.33
     }
   ]
 }
