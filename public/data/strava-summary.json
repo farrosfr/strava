@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-06-25T22:05:12.933Z",
+  "updatedAt": "2026-06-25T23:53:41.220Z",
   "date": "2026-06-26",
   "timezone": "Asia/Jakarta",
   "startDate": "2026-05-14",
@@ -8,7 +8,7 @@
     "runWalkKm": 0
   },
   "total": {
-    "runWalkKm": 87.41
+    "runWalkKm": 87.29
   },
   "daily": [
     {
@@ -97,7 +97,7 @@
     },
     {
       "date": "2026-06-23",
-      "runWalkKm": 1.12
+      "runWalkKm": 1
     }
   ],
   "activities": [
@@ -372,7 +372,7 @@
       "name": "Evening Run",
       "type": "Run",
       "date": "2026-06-23",
-      "distanceKm": 1.12
+      "distanceKm": 1
     }
   ]
 }
