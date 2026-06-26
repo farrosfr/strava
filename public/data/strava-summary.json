@@ -1,11 +1,11 @@
 {
-  "updatedAt": "2026-06-26T16:20:35.480Z",
-  "date": "2026-06-26",
+  "updatedAt": "2026-06-26T18:10:24.909Z",
+  "date": "2026-06-27",
   "timezone": "Asia/Jakarta",
   "startDate": "2026-05-14",
   "source": "strava",
   "today": {
-    "runWalkKm": 2.38
+    "runWalkKm": 0
   },
   "total": {
     "runWalkKm": 89.67
